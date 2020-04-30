@@ -1,0 +1,8 @@
+export const LOADING_STARTED = "AUTH_LOADING_STARTED";
+export const LOADING_FAILED = "AUTH_LOADING_FAILED";
+export const LOAD_AUTH_DATA = "LOAD_AUTH_DATA";
+export const TOGGLE_NEWSLETTER =  "TOGGLE_NEWSLETTER"; 
+export const REGISTER_FAILS = "REGISTER_FAILS" ;
+export const LOG_USER_IN = "LOG_USER_IN";
+export const LOG_USER_OUT = "LOG_USER_OUT";
+export const SKIP_LOGIN =  "SKIP_LOGIN";
