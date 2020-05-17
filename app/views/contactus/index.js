@@ -119,6 +119,7 @@ class contactUsScreen extends React.Component {
       enquiry: this.state.inputEqnuiry,
     };
     Axios.post(`${BASEURI}information/contact`, body).then(({data}) => {
+      
       if (data.hasOwnProperty('continue')) {
         this.setState({
           inputEmail: '',
@@ -131,8 +132,13 @@ class contactUsScreen extends React.Component {
         this.nameRef.Clear();
         this.emailRef.Clear();
         this.inquiryRef.Clear();
-        Toast.show(this.state.text_success);
-      } else {
+        Toast.show(this.state.text_success.replace(/<\/?[^>]+(>|$)/g, ""));
+      } else if(
+        data.hasOwnProperty('error_name') && data.error_name != '' ||
+        data.hasOwnProperty('error_email') && data.error_email != '' ||
+        data.hasOwnProperty('error_telephone') && data.error_telephone != '' ||
+        data.hasOwnProperty('error_enquiry') && data.error_enquiry != ''
+      ) {
         const {error_name, error_email, error_enquiry} = data;
         this.setState({
           error_name,

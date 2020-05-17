@@ -66,7 +66,7 @@ export const InitializApp = () => {
         `${BASEURI}checkout/shipping_address&cookie=${cookie}`,
       );
       let homeLayoutPromise = axios.get(
-        `${BASEURI}ocapi/home&cookie=${cookie}`,
+        `${BASEURI}ocapi/home`,
       );
       let translationPromise = axios.get(
         `${BASEURI}ocapi/translate&cookie=${cookie}`,

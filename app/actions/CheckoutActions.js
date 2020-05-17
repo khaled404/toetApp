@@ -2,6 +2,7 @@ import Axios from 'axios';
 import * as Types from './CheckoutTypes';
 import { BASEURI } from '../constants/AppInfo';
 import Toast from 'react-native-root-toast';
+import { SetCookie, GetCookie } from "../util"
 export const StartLoading = () => ({ type: Types.START_LOADING });
 export const EndLoading = () => ({ type: Types.END_LOADING });
 
@@ -33,7 +34,7 @@ export const InitCheckout = () => {
 
         let paymentMethodsPromise = Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/payment_method`);
         let shippingMethodPromise = Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/shipping_method`);
-
+        
         const { shipping_methods, text_checkout_shipping_method, shipping_method_code } = (await shippingMethodPromise).data;
         const { text_checkout_payment_method, payment_methods, payment_method_code, agree_id, text_agree } = (await paymentMethodsPromise).data;
 
@@ -41,7 +42,7 @@ export const InitCheckout = () => {
         dispatch({ type: Types.SET_PAYMENT_METHOD, payload: payment_method_code });
         dispatch({ type: Types.LOAD_SHIPPING_METHODS_LIST, payload: shipping_methods });
         dispatch({ type: Types.SET_SHIPPING_METHOD, payload: shipping_method_code });
-        dispatch({ type: Types.SET_AGREE_DATA, payload: { agree_id, text_agree } });
+        //dispatch({ type: Types.SET_AGREE_DATA, payload: { agree_id, text_agree } });
         let translates = {
             error_address,
             error_shipping,
@@ -92,7 +93,6 @@ export const InitGuestCheckout = (guestData) => {
         const { text_checkout_payment_method, payment_methods, payment_method_code, agree_id, text_agree } = (await paymentMethodsPromise).data;
 
         dispatch({ type: Types.LOAD_PAYMENT_METHODS_LIST, payload: payment_methods });
-        dispatch({ type: Types.SET_PAYMENT_METHOD, payload: payment_method_code });
         dispatch({ type: Types.LOAD_SHIPPING_METHODS_LIST, payload: shipping_methods });
         dispatch({ type: Types.SET_SHIPPING_METHOD, payload: shipping_method_code });
         dispatch({ type: Types.SET_AGREE_DATA, payload: { agree_id, text_agree } });
@@ -165,21 +165,35 @@ export const SetShippingtMethod = (shipping_address_id, shipping_method, cb) => 
 }
 export const Checkout = (payment_address_id, comment, cbWebView, cb) => {
     return async dispatch => {
-        let validation = await Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/validate`)
+        let cookie = await GetCookie();
+        console.log('cookie',cookie);
+        
+        let validation = await Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/validate&cookie=${cookie}`)
         if (validation.status != 200) {
             Toast.show("حدث خطأ ما، يرجى المحاولة لاحقا أو الإتصال بنا");
             return;
         }
-
-        let confirmCheckout = await Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/confirm`)
-        if (confirmCheckout.status != 200) {
+        // console.log('validation',validation);
+        // wait axios({
+        //     method: 'post',
+        //     url: `${BASEURI}ocapi/checkout/cart&cookie=${cookie}`,
+        //     data: body,
+        //     headers: {
+        //       'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+        //       'x-requested-api': 'ocapi',
+        //       'x-requested-with': 'XMLHttpRequest'
+        //     }
+        //   })
+        let confirmCheckout = await Axios.post(`${BASEURI}ocapi/checkout/checkoutmap/confirm&cookie=${cookie}`)
+        if (confirmCheckout.status != 200 && confirmCheckout.data != null) {
             Toast.show("حدث خطأ ما، يرجى المحاولة لاحقا أو الإتصال بنا");
             return;
         }
         let quickConfirmCheckout = await Axios.post(`${BASEURI}ocapi/checkout/quickconfirm`, { payment_address_id });
         if (quickConfirmCheckout.data.hasOwnProperty("message") && quickConfirmCheckout.data.message == false) {
             //Go to webview
-            cbWebView(`${BASEURI}ocapi/checkout/confirm_order`);
+            
+            cbWebView(`${BASEURI}ocapi/checkout/checkoutmap/confirm_order&cookie=${cookie}`);
 
         }
         else {

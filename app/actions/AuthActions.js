@@ -80,7 +80,8 @@ export const LoginNormal = (body, cb) => {
         }
     }
 }
-export const LoginWithFacebook = (token, cb) => {
+export const LoginWithFacebook = (token,user_id, cb) => {
+    console.log('LoginWithFacebook2',user_id);
     return async dispatch => {
         dispatch(StartLoading());
 
@@ -88,10 +89,10 @@ export const LoginWithFacebook = (token, cb) => {
         try {
             let response = await axios.post(`${BASEURI}ocapi/social/login&cookie=${cookie}`, {
                 type: 'facebook',
-                accessToken: token
+                accessToken: token,
+                user_id:user_id
             });
             let data = response.data;
-
             const { firstname, lastname, email, telephone, newsLetter } = data;
             dispatch({ type: Types.LOAD_AUTH_DATA, payload: { firstname, lastname, email, telephone, newsLetter } });
             const { currency, currencies, language, languages } = data;

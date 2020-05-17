@@ -94,6 +94,10 @@ class ProductDetailsView extends React.Component {
       wished: this.props.pageData.wishlist,
       inCart,
     });
+
+      console.log('self.props.pageData.products',this.props.pageData);
+    
+    
   }
   onProductSharePress() {
     let message = `
@@ -605,6 +609,7 @@ class ProductDetailsView extends React.Component {
           <AddReview product_id={this.product_id} />
 
           <SectionDivider />
+          { typeof (this.props.pageData.products) !== 'undefined' && Array.isArray(this.props.pageData.products) && this.props.pageData.products.length > 0  ?
           <View style={{padding: 10}}>
             <Text
               style={[
@@ -637,7 +642,7 @@ class ProductDetailsView extends React.Component {
               horizontal
             />
           </View>
-
+          :null}
           <View
             style={{
               height: normalize(120, 'height'),

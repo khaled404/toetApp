@@ -86,16 +86,13 @@ class AddressbookView extends React.Component {
               style={{flexGrow: 0}}
               data={this.ParseAddressList()}
               renderItem={({item, index, separators}) => (
-                <TouchableOpacity
-                  onPress={() => this.props.setActiveAddress(item.address_id)}
-                >
+                
                   <AddressItem
                     onEditPress={this.onEditPress.bind(this)}
                     onDeletePress={this.onDeletePress.bind(this)}
                     Address={item}
                     IsActive={item.active}
                   />
-                </TouchableOpacity>
               )}
               keyExtractor={(e, i) => i.toString()}
               ListEmptyComponent={

@@ -95,6 +95,8 @@ export const AddToCart = (body, cb, errorCb) => {
       `${BASEURI}checkout/cart/add&cookie=${cookie}`,
       body,
     );
+    console.log('response',response);
+    
     if (response.data.hasOwnProperty('success')) {
       cb(response.data.success);
     } else {

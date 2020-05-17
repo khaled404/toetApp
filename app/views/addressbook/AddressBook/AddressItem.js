@@ -30,7 +30,7 @@ let component = ({
       <AddressShow Address={Address} />
     </View>
     <View style={{flex: 1, flexDirection: 'column'}}>
-      {/* <View
+      <View
         style={{
           flex: 1,
           justifyContent: 'flex-end',
@@ -50,7 +50,7 @@ let component = ({
             borderColor: IsActive ? StylesConstant.MainColor : '#a1a1a1',
           }}
         />
-      </View> */}
+      </View>
       <View
         style={{
           flex: 1,

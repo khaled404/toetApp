@@ -34,7 +34,7 @@ export default ({ Review }) => {
 
             </Row>
             <Row style={{ flexDirection: 'column' }}>
-                <Text style={{ fontSize: 14 }}>{Review.text}</Text>
+                <Text style={{ fontSize: 14 }}>{Review.text.replace(/<\/?[^>]+(>|$)/g, "")}</Text>
             </Row>
             <Row></Row>
         </Col>

@@ -21,7 +21,7 @@ class SocialLogin extends React.PureComponent {
     }
 
     loginWihFacebook() {
-        LoginManager.logInWithPermissions(["public_profile"]).then((result) => {
+        LoginManager.logInWithPermissions(["public_profile", "email"]).then((result) => {
             console.log(result);
             if (result.isCancelled) {
                 console.log("Login cancelled");
@@ -30,8 +30,7 @@ class SocialLogin extends React.PureComponent {
 
                 AccessToken.getCurrentAccessToken().then((data) => {
                     let token = data.accessToken.toString();
-                    this.props.LoginWithFacebook(token, this.redirectToApp());
-                    console.log(data.accessToken.toString())
+                    this.props.LoginWithFacebook(token,data.userID, this.redirectToApp());
                 });
             }
         },
@@ -80,7 +79,7 @@ class SocialLogin extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-    LoginWithFacebook: (token, cb) => dispatch(LoginWithFacebook(token, cb)),
+    LoginWithFacebook: (token, user_id,cb) => dispatch(LoginWithFacebook(token,user_id, cb)),
     LoginWithTwitter: (token, cb) => dispatch(LoginWithTwitter(token, cb))
 })
 export default connect(null, mapDispatchToProps)(SocialLogin);

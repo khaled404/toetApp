@@ -13,8 +13,6 @@ export const EndLoading = () => {
 };
 
 export const FetchSpeicalPage = path => {
-  console.log('fetched');
-
   return async dispatch => {
     let cookie = await GetCookie();
     dispatch(StartLoading());
@@ -295,14 +293,13 @@ export const FetchWishlist = () => {
 };
 export const AddToWishlist = async product_id => {
   let cookie = await GetCookie();
-  console.log(`${BASEURI}account/wishlist/add&cookie=${cookie}`);
 
   let response = await axios.post(
     `${BASEURI}account/wishlist/add&cookie=${cookie}`,
-    {product_id},
+    {product_id:product_id},
   );
-  console.log('wishlist', response.data);
-
+    console.log('whish',response);
+    
   Toast.show(
     ChooseStringByLanguage(
       'Added to wishlist successfully',
@@ -344,50 +341,47 @@ export const FetchCart = () => {
     }
   };
 };
-function stringify(obj_from_json) {
-  if (typeof obj_from_json !== 'object' || Array.isArray(obj_from_json)) {
-    // not an object, stringify using native function
-    return JSON.stringify(obj_from_json);
-  }
-  // Implements recursive object serialization according to JSON spec
-  // but without quotes around the keys.
-  let props = Object.keys(obj_from_json)
-    .map(key => `${key}:${stringify(obj_from_json[key])}`)
-    .join(',');
-  return `{${props}}`;
-}
+
 export const ChangeCartQuanitity = (cart_id, quanitity) => {
   return async dispatch => {
     let cookie = await GetCookie();
 
     dispatch(StartLoading());
     try {
-      //let body = `quantity[${cart_id}]=${quanitity}`;
-      // body[`quantity[${cart_id}]`] = `${quanitity}`;
-      let body = {};
-      // body.push({`quantity[${cart_id}]`:quanitity})
-      body['quantity[' + cart_id + ']'] = quanitity;
-      //body = stringify(body);
-      str = JSON.stringify(body);
-      str = JSON.parse(str);
-
-      //body = JSON.parse(body);
-      let response = await axios.post(
-        `${BASEURI}ocapi/checkout/cart&cookie=${cookie}`,
-        body,
-      );
-      console.log('====================================');
-      console.log('body', str);
-      console.log('====================================');
-      console.log('====================================');
-      console.log('response', response.data);
-      console.log('====================================');
+      let body = `quantity[${cart_id}]=${quanitity}`;
+      
+      let response = await axios({
+        method: 'post',
+        url: `${BASEURI}ocapi/checkout/cart&cookie=${cookie}`,
+        data: body,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+          'x-requested-api': 'ocapi',
+          'x-requested-with': 'XMLHttpRequest'
+        }
+      })
+      
       let data = response.data;
       dispatch(LoadCart(data));
     } catch (error) {
       console.log('====================================');
       console.log('error', error);
       console.log('====================================');
+      dispatch(EndLoading());
+    }
+  };
+};
+export const DeleteCartItem = (cart_id) => {
+  return async dispatch => {
+    let cookie = await GetCookie();
+
+    dispatch(StartLoading());
+    try {
+      let response = await axios.get(`${BASEURI}ocapi/checkout/cart&cookie=${cookie}&remove=${cart_id}`);
+      let data = response.data;
+      
+      dispatch(LoadCart(data));
+    } catch (error) {
       dispatch(EndLoading());
     }
   };

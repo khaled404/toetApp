@@ -4,6 +4,8 @@ import SafeView from '../../common/UI/SafeView';
 import StylesConstant from '../../constants/styles';
 import { Container, Header, Content, ListItem, Radio, Right, Left, Form, CheckBox, Body, List } from 'native-base';
 import { SetPaymentMethod } from '../../actions/CheckoutActions'
+import {FetchCart} from '../../actions/ShopActions';
+
 import BlankHeader from '../../common/NavComponenets/headers/BlankHeader';
 import { connect } from 'react-redux';
 class PaymentWays extends React.Component {
@@ -22,7 +24,7 @@ class PaymentWays extends React.Component {
         })
         this.props.SetPaymentMethod(this.props.payment_address_id,payment_method,()=>{
             this.props.navigation.goBack(null);
-
+            this.props.FetchCart()
         });
     }
     renderPaymentList() {
@@ -68,6 +70,7 @@ const mapStateToProps = state => ({
 
 });
 const mapDispatchToProps = dispatch => ({
-    SetPaymentMethod: (payment_address_id, payment_method,cb) => dispatch(SetPaymentMethod(payment_address_id, payment_method,cb))
+    SetPaymentMethod: (payment_address_id, payment_method,cb) => dispatch(SetPaymentMethod(payment_address_id, payment_method,cb)),
+    FetchCart :()=> dispatch(FetchCart())
 })
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentWays);

@@ -4,6 +4,7 @@ import SafeView from '../../../common/UI/SafeView';
 import StylesConstant from '../../../constants/styles';
 import { Container, Header, Content, ListItem, Radio, Right, Left, Form, CheckBox, Body, List } from 'native-base';
 import { SetShippingtMethod } from '../../../actions/CheckoutActions'
+import {FetchCart} from '../../../actions/ShopActions';
 import BlankHeader from '../../../common/NavComponenets/headers/BlankHeader';
 import { connect } from 'react-redux';
 class PaymentWays extends React.Component {
@@ -19,15 +20,19 @@ class PaymentWays extends React.Component {
     onListPress(shipping_method,title){
         this.setState({
             selected:shipping_method
-        })
-        this.props.navigation.setParams({
-            shippingTitle:title
-        });
-        this.props.SetShippingtMethod(this.props.shipping_address_id,shipping_method,()=>{
+        },()=>{
+            this.props.navigation.setParams({
+                shippingTitle:title
+            });
+            this.props.SetShippingtMethod(this.props.shipping_address_id,shipping_method,()=>{
          
-            this.props.navigation.goBack(null);
-
-        });
+                this.props.navigation.goBack(null);
+                this.props.FetchCart()
+            });
+        })
+        
+        
+        
     }
     renderShippingList() {
 
@@ -39,11 +44,11 @@ class PaymentWays extends React.Component {
             for (const [key2, value2] of Object.entries(value.quote)) {
                 ret.push(<ListItem >
                      <Left>
-                         <Text>{value2.code.includes('xshipping') || value2.code.includes('weight') || value2.code.includes('category_product_based') ? value2.title : value.title}</Text>
+                         <Text>{value2.code.includes('xshipping') || value2.code.includes('weight') || value2.code.includes('category_product_based')|| value2.code.includes('geo_zone_shipping') ? value2.title : value.title}</Text>
                      </Left>
                      <Right>
                      <Radio
-                             onPress={() => this.onListPress(value2.code, value2.code.includes('xshipping') || value2.code.includes('weight') || value2.code.includes('category_product_based') ? value2.title : value.title)}
+                             onPress={() => this.onListPress(value2.code, value2.code.includes('xshipping') || value2.code.includes('weight') || value2.code.includes('category_product_based') || value2.code.includes('geo_zone_shipping') ? value2.title : value.title)}
                              color={"#F06B4C"}
                              selectedColor={"#F06B4C"}
                              selected={this.state.selected === value2.code}
@@ -73,6 +78,7 @@ const mapStateToProps = state => ({
 
 });
 const mapDispatchToProps = dispatch => ({
-    SetShippingtMethod: (payment_address_id, payment_method,cb) => dispatch(SetShippingtMethod(payment_address_id, payment_method,cb))
+    SetShippingtMethod: (payment_address_id, payment_method,cb) => dispatch(SetShippingtMethod(payment_address_id, payment_method,cb)),
+    FetchCart :()=> dispatch(FetchCart())
 })
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentWays);

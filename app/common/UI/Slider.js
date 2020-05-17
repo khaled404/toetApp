@@ -28,7 +28,7 @@ export default class SliderBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentImage: 2
+            currentImage: 0
         };
         this.onCurrentImagePressedHandler = this.onCurrentImagePressedHandler.bind(
             this

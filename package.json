@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "npx jetify && cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug",
+    "android-release": "npx jetify && cd ./android && ./gradlew clean && ./gradlew app:assembleRelease && ./gradlew installRelease",
+    "android-bundle": "npx jetify && cd ./android && ./gradlew clean && ./gradlew bundleRelease",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",

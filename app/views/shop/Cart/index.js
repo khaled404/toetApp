@@ -8,7 +8,7 @@ import StylesConstants from '../../../constants/styles';
 import CartItem from './CartItem';
 import PrimaryButton from '../../../common/UI/PrimaryButton';
 import {connect} from 'react-redux';
-import {FetchCart, ChangeCartQuanitity} from '../../../actions/ShopActions';
+import {FetchCart, ChangeCartQuanitity,DeleteCartItem} from '../../../actions/ShopActions';
 import LoadingIndicator from '../../../common/UI/LoadingIndicator';
 import {NavigationEvents} from 'react-navigation';
 import Toast from 'react-native-root-toast';
@@ -32,12 +32,15 @@ class CartView extends React.Component {
       Toast.show('أقل عدد ممكن من المنتجات هو 0');
       return;
     }
+    console.log('id',id);
+    console.log('newQuantity',newQuantity);
+    
     this.props.ChangeCartQuanitity(id, newQuantity);
   }
   onDeletePress(id) {
     let newQuantity = 0;
 
-    this.props.ChangeCartQuanitity(id, newQuantity);
+    this.props.DeleteCartItem(id);
   }
   _renderTotals() {
     let totals = this.props.pageData.totals;
@@ -229,6 +232,8 @@ const mapDispatchToProps = dispatch => ({
   fetchCart: () => dispatch(FetchCart()),
   ChangeCartQuanitity: (id, quantity) =>
     dispatch(ChangeCartQuanitity(id, quantity)),
+  DeleteCartItem: (id) =>
+    dispatch(DeleteCartItem(id)),
 });
 export default connect(
   mapStateToProps,

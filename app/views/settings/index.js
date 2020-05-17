@@ -2,10 +2,12 @@ import React from 'react';
 import {
   SetLanguage,
   SetCurrency,
+  SetNotificationStatus,
   ChooseStringByLanguage,
   TranslateString,
   GetLanguage,
   GetCurrency,
+  GetNotificationStatus
 } from '../../util';
 import {View, Picker, Toast, I18nManager, Alert} from 'react-native';
 import SafeView from '../../common/UI/SafeView';
@@ -58,15 +60,25 @@ class SettingsView extends React.Component {
   async componentDidMount() {
     let language = await GetLanguage();
     let currency = await GetCurrency();
+    let notifications = await GetNotificationStatus().then((e)=>{      
+      if (e == false || e == 0) {
+        this.setState({notifications:'0'})
+      }else{
+        this.setState({notifications:'1'})
+      }
+    })
+    
     this.setState({
       language,
       currency,
+      notifications
     });
   }
   Save() {
     var p1 = SetCurrency(this.state.currency);
     var p2 = SetLanguage(this.state.language);
-    Promise.all(p1, p2).then(() => {
+    var p3 = SetNotificationStatus(this.state.notifications)
+    Promise.all(p1, p2,p3).then(() => {
       //Restart to do all the initalization
       I18nManager.forceRTL(this.state.language === 'ar');
       RNRestart.Restart();

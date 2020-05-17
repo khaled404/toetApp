@@ -93,7 +93,7 @@ class CheckoutView extends React.Component {
         for (const [key, value] of Object.entries(this.props.shipping_methods)) {
             for (const [key2, value2] of Object.entries(value.quote)) {
                 if (value2.code == c) {
-                    return value2.code.includes('weight') || value2.code.includes('category_product_based') ? value2.title : value.title;
+                    return value2.code.includes('weight') || value2.code.includes('category_product_based')|| value2.code.includes('geo_zone_shipping') ? value2.title : value.title;
                 }
             }
         }
@@ -122,7 +122,7 @@ class CheckoutView extends React.Component {
 
         let paymentMethodValid = Boolean(this.props.payment_method);
         let shippingMethodValid = Boolean(this.props.shipping_method);
-        let agreedToTerms = this.state.termsAccepted;
+        // let agreedToTerms = this.state.termsAccepted;
 
 
 
@@ -143,10 +143,10 @@ class CheckoutView extends React.Component {
             Toast.show(this.props.translates['error_shipping']);
             return false;
         }
-        if (!agreedToTerms) {
-            Toast.show(this.props.translates['error_agree']);
-            return false;
-        }
+        // if (!agreedToTerms) {
+        //     Toast.show(this.props.translates['error_agree']);
+        //     return false;
+        // }
         return true;
 
 
@@ -164,36 +164,36 @@ class CheckoutView extends React.Component {
         }
     }
     renderTerms() {
-        return (<View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 3, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
-                <Text onPress={() => this.setState({ termsVisible: true })} style={[{ color: StylesConstant.MainColor, fontSize: 15 }, CommonStyles.FontFamilyMedium]}>
-                    {this.props.agree_data.text_agree}
-                </Text>
-            </View>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 13 }}>
-                <CheckBox color={"#F06B4C"} checked={this.state.termsAccepted} onPress={() => this.setState({ termsAccepted: !this.state.termsAccepted })} />
-            </View>
-            <Overlay
-                isVisible={this.state.termsVisible}
-                windowBackgroundColor="rgba(0, 0, 0, .4)"
-                overlayBackgroundColor="#F5F6F8"
-                overlayStyle={{ borderRadius: 10 }}
-                onBackdropPress={() => this.setState({ termsVisible: false })}
-                width={Dimensions.get('window').width - 20}
-                height={Dimensions.get('window').height - 20}>
-                <ScrollView>
-                <Icon 
-                name="close" 
-                color="grey" 
-                onPress={() => this.setState({ termsVisible: false })}
-                containerStyle={{alignSelf:'flex-start'}} />
-                    <HTML
-                        html={this.state.termsContent}
-                        imagesMaxWidth={Dimensions.get('window').width - 20} />
-                </ScrollView>
+        // return (<View style={{ flexDirection: 'row' }}>
+        //     <View style={{ flex: 3, justifyContent: 'flex-start', alignItems: 'flex-start', flexDirection: 'row' }}>
+        //         <Text onPress={() => this.setState({ termsVisible: true })} style={[{ color: StylesConstant.MainColor, fontSize: 15 }, CommonStyles.FontFamilyMedium]}>
+        //             {this.props.agree_data.text_agree}
+        //         </Text>
+        //     </View>
+        //     {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 13 }}>
+        //         <CheckBox color={"#F06B4C"} checked={this.state.termsAccepted} onPress={() => this.setState({ termsAccepted: !this.state.termsAccepted })} />
+        //     </View> */}
+        //     <Overlay
+        //         isVisible={this.state.termsVisible}
+        //         windowBackgroundColor="rgba(0, 0, 0, .4)"
+        //         overlayBackgroundColor="#F5F6F8"
+        //         overlayStyle={{ borderRadius: 10 }}
+        //         onBackdropPress={() => this.setState({ termsVisible: false })}
+        //         width={Dimensions.get('window').width - 20}
+        //         height={Dimensions.get('window').height - 20}>
+        //         <ScrollView>
+        //         <Icon 
+        //         name="close" 
+        //         color="grey" 
+        //         onPress={() => this.setState({ termsVisible: false })}
+        //         containerStyle={{alignSelf:'flex-start'}} />
+        //             <HTML
+        //                 html={this.state.termsContent}
+        //                 imagesMaxWidth={Dimensions.get('window').width - 20} />
+        //         </ScrollView>
 
-            </Overlay>
-        </View>);
+        //     </Overlay>
+        // </View>);
     }
     renderTotals(){
         let totals = this.props.totals;
@@ -269,14 +269,14 @@ class CheckoutView extends React.Component {
 
 
 
-                <SectionDivider margin={15} />
+                {/* <SectionDivider margin={15} /> */}
 
 
                 {this.renderTerms()}
 
                 <SectionDivider marginTop={15} marginBottom={25} />
 
-                <View style={{ flexDirection: 'column', height: 90 }}>
+                <View style={{ flexDirection: 'column'}}>
                     {this.renderTotals()}                   
                     <View style={{ flex: 1, height: 50,marginTop:10 }}>
                         <PrimaryButton Title={TranslateString("button_checkout")} onPress={() => this.onCheckoutPress()} />

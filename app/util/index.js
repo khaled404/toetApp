@@ -81,7 +81,18 @@ export function RemoveHTMLFromString(encodedString) {
         return String.fromCharCode(num);
     });
 }
+export async function GetNotificationStatus() {
+    let notification = await AsyncStorage.getItem(NOTIFICATION_KEY);
+    if (notification === null)
+        return false;
+    return notification;
+
+}
+export async function SetNotificationStatus(value) {
+    await AsyncStorage.setItem(NOTIFICATION_KEY, value);
+}
 const COOKIE_KEY = "COOKIE";
 const CURRENCY_KEY = "CURRENCY";
 const LANGUAGE_KEY = "LANGUAGE";
 const SKIPPED_KEY = "USER_SKIPPED";
+const NOTIFICATION_KEY = "NOTIFICATION";

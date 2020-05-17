@@ -14,29 +14,32 @@ export default ({banners, navigation}) => {
 
   let onCurrentImgPress = index => {
     let choosedBanner = bnrs[index];
-    if (
-      choosedBanner.app_link_id === '0' ||
-      typeof (choosedBanner.app_link === 'undefined')
-    )
-      return;
+    
+    
+    // if (choosedBanner.app_link_id === '0' ||typeof (choosedBanner.app_link === 'undefined')){
+    //   return;
+    // }
+      
 
     switch (choosedBanner.app_link) {
-      case 'category':
-        navigation.navigate('categorydetails', {
-          category_id: choosedBanner.app_link_id,
-        });
-        break;
-      case 'manufacturer':
-        navigation.navigate('branddetails', {
-          manufacturer_id: choosedBanner.app_link_id,
-        });
-        break;
+    //   case 'category':
+    //     navigation.navigate('categorydetails', {
+    //       category_id: choosedBanner.app_link_id,
+    //     });
+    //     break;
+    //   case 'manufacturer':
+    //     navigation.navigate('branddetails', {
+    //       manufacturer_id: choosedBanner.app_link_id,
+    //     });
+    //     break;
       case 'product':
         navigation.navigate('productdetails', {
           product_id: choosedBanner.app_link_id,
         });
         break;
     }
+    console.log('choosedBanner.app_link_id',choosedBanner.app_link_id );
+    console.log('choosedBanner.app_link',choosedBanner.app_link );
   };
 
   return (

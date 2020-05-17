@@ -52,12 +52,19 @@ class CompareScreen extends React.Component {
     return result;
   }
   AddToCart(product_id) {
-    let body = `product_id=${product_id}&quantity=1`;
+    // let body = `product_id=${product_id}&quantity=1`;
+    let body = {
+      product_id: product_id,
+      quantity: 1,
+    };
     this.props.AddToCart(
       body,
       msg => {
-        if (msg) Toast.show(msg);
-        else this.props.navigation.navigate('productdetails', {product_id});
+        if (msg) {
+          let mm = msg.replace(/<\/?[^>]+(>|$)/g, "")
+          Toast.show(mm);
+        }
+        else {this.props.navigation.navigate('productdetails', {product_id});}
       },
       () => {
         this.props.navigation.navigate('productdetails', {product_id});

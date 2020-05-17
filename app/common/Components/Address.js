@@ -4,6 +4,8 @@ import { AddAddress } from '../../actions/AccountActions';
 import normalize from 'react-native-normalize';
 
 export default ({Address,style}) =>{
+    console.log('Address',Address);
+    
     if(typeof(Address) === "undefined") return null;
     
     if(typeof(Address) === "string"){

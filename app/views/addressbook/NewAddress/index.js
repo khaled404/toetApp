@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Picker} from 'react-native';
+import {View, Text, Picker,Switch} from 'react-native';
 import {
   GetCookie,
   TranslateString,
@@ -47,7 +47,7 @@ class AddressEditor extends React.Component {
       zone_id: '',
       zones: [],
       city: '',
-      default: 1,
+      default: true,
     };
   }
   async componentDidMount() {
@@ -57,6 +57,8 @@ class AddressEditor extends React.Component {
       let response = await axios.get(
         `${BASEURI}account/address/edit&address_id=${address_id}&cookie=${cookie}`,
       );
+      console.log('response.data',response.data);
+      const defaul = response.data.default
       const {
         firstname,
         lastname,
@@ -64,6 +66,7 @@ class AddressEditor extends React.Component {
         country_id,
         zone_id,
         city,
+        // default
       } = response.data;
       this.setState({
         firstname,
@@ -72,17 +75,28 @@ class AddressEditor extends React.Component {
         country_id,
         zone_id,
         city,
+        default:defaul,
         editMode: true,
       });
       this.firstnameRef.SetValue(firstname);
       this.lastnameRef.SetValue(lastname);
       this.address_1Ref.SetValue(address_1);
       this.cityRef.SetValue(city);
-      this.onCountryChange(country_id);
+      this.onCountryChange(country_id).then(()=>{
+        this.setState({
+          zone: zone_id,
+        });
+      });
+      
     }
   }
   onSavePress() {
     const body = {...this.state};
+    if (body.default == true) {
+      body.default = 1
+    }else{
+      body.default = 0
+    }
     delete body.zones;
     if (this.state.editMode) {
       var address_id = this.props.navigation.getParam('address_id');
@@ -194,7 +208,7 @@ class AddressEditor extends React.Component {
                   />
                 </Col>
               </Row>
-              <Row>
+              <Row  style={{marginBottom: 15}}>
                 <Col>
                   <TextInput
                     ErrorMessage={this.props.pageData.error_city}
@@ -203,6 +217,21 @@ class AddressEditor extends React.Component {
                     ref={r => (this.cityRef = r)}
                     onChangeText={t => this.setState({city: t})}
                   />
+                </Col>
+              </Row>
+              <Row style={{background:'red'}}>
+                <Col>
+                <Text>{this.props.pageData2.entry_default}</Text>
+                </Col>
+                <Col>
+                <View style={{display:'flex',alignItems:'flex-end'}}>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    onValueChange={()=>this.setState({default:!this.state.default})}
+                    value={this.state.default}
+                  />
+                </View>
+                
                 </Col>
               </Row>
             </Grid>
@@ -226,6 +255,7 @@ class AddressEditor extends React.Component {
 
 const mapStateToProps = state => ({
   pageData: state.account.addressEditor,
+  pageData2: state.account.addressesPage,
   countries: state.settings.countries,
 });
 const mapDispatchToProps = dispatch => ({
